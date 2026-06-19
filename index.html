@@ -1034,9 +1034,36 @@ function populateSummary() {
 }
 
 // ── SUBMIT ────────────────────────────────────────────
-function submitForm() {
-  // In production: POST to your Google Apps Script web app URL here
-  goTo(6);
+async function submitForm() {
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzXpEvKT0e9WY3CvvYMinqVKrR19YalB21BtQ6KgcfFR0PzBV2j8zA9w3FQKcc6KhowJA/exec';
+
+  const payload = {
+    name:         document.getElementById('inp-name').value.trim(),
+    phone:        document.getElementById('inp-phone').value.trim(),
+    email:        document.getElementById('inp-email').value.trim(),
+    batch:        document.getElementById('inp-batch').value.trim(),
+    platform:     state.platform,
+    courseStatus: state.courseStatus
+  };
+
+  // Show loading state
+  const btn = document.getElementById('btnNext');
+  btn.textContent = 'Submitting...';
+  btn.disabled = true;
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method:  'POST',
+      mode:    'no-cors',  // required for Apps Script
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload)
+    });
+    goTo(6);  // success slide
+  } catch (err) {
+    btn.textContent = 'Retry';
+    btn.disabled = false;
+    alert('Submission failed. Check your connection and try again.');
+  }
 }
 
 // ── KEYBOARD NAV ─────────────────────────────────────
