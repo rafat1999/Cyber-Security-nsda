@@ -483,7 +483,6 @@ body::before {
 <div class="glow-tl"></div>
 <div class="glow-br"></div>
 
-<!-- TOP BAR -->
 <div class="topbar">
   <div class="topbar-logo">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -497,10 +496,8 @@ body::before {
   <div class="step-counter">STEP <span id="stepNum">0</span> / 5</div>
 </div>
 
-<!-- SLIDES WRAPPER -->
 <div class="slides">
 
-  <!-- SLIDE 0: LANDING / HERO -->
   <div class="slide active" id="slide-0">
     <div class="slide-inner">
       <div class="eyebrow">Batch Enrollment · 2025</div>
@@ -553,7 +550,6 @@ body::before {
     </div>
   </div>
 
-  <!-- SLIDE 1: PERSONAL INFO -->
   <div class="slide" id="slide-1">
     <div class="slide-inner">
       <div class="eyebrow">Step 1 of 5</div>
@@ -597,7 +593,6 @@ body::before {
     </div>
   </div>
 
-  <!-- SLIDE 2: PLATFORM -->
   <div class="slide" id="slide-2">
     <div class="slide-inner">
       <div class="eyebrow">Step 2 of 5</div>
@@ -645,7 +640,6 @@ body::before {
     </div>
   </div>
 
-  <!-- SLIDE 3: ONLINE TERMS (conditional) -->
   <div class="slide" id="slide-3">
     <div class="slide-inner">
       <div class="eyebrow">Step 3 of 5 · Online Only</div>
@@ -712,7 +706,6 @@ body::before {
     </div>
   </div>
 
-  <!-- SLIDE 3B: DISAGREE DEAD-END -->
   <div class="slide" id="slide-3b">
     <div class="slide-inner" style="max-width:580px; text-align:center; margin:0 auto;">
       <div class="disagree-box">
@@ -732,7 +725,6 @@ body::before {
     </div>
   </div>
 
-  <!-- SLIDE 4: COURSE STATUS -->
   <div class="slide" id="slide-4">
     <div class="slide-inner">
       <div class="eyebrow">Step 4 of 5</div>
@@ -780,7 +772,6 @@ body::before {
     </div>
   </div>
 
-  <!-- SLIDE 5: REVIEW & SUBMIT -->
   <div class="slide" id="slide-5">
     <div class="slide-inner">
       <div class="eyebrow">Step 5 of 5 · Final Review</div>
@@ -829,7 +820,6 @@ body::before {
     </div>
   </div>
 
-  <!-- SLIDE 6: SUCCESS -->
   <div class="slide" id="slide-6">
     <div class="slide-inner">
       <div class="success-center">
@@ -846,10 +836,7 @@ body::before {
     </div>
   </div>
 
-</div><!-- /slides -->
-
-<!-- BOTTOM NAV -->
-<div class="bottom-nav" id="bottomNav">
+</div><div class="bottom-nav" id="bottomNav">
   <div class="nav-dots">
     <div class="nav-dot" id="dot-0"></div>
     <div class="nav-dot" id="dot-1"></div>
@@ -1035,7 +1022,8 @@ function populateSummary() {
 
 // ── SUBMIT ────────────────────────────────────────────
 async function submitForm() {
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzXpEvKT0e9WY3CvvYMinqVKrR19YalB21BtQ6KgcfFR0PzBV2j8zA9w3FQKcc6KhowJA/exec';
+  // Make sure this URL is your newly deployed one
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw-7Hs-AsjqrwqQA9DwYFgAgATyF65B37XULiuqKAILxF8yB1Eu1r05TIZfppMTyVfLIQ/exec';
 
   const payload = {
     name:         document.getElementById('inp-name').value.trim(),
@@ -1052,14 +1040,19 @@ async function submitForm() {
   btn.disabled = true;
 
   try {
-    await fetch(SCRIPT_URL, {
+    const response = await fetch(SCRIPT_URL, {
       method:  'POST',
-      mode:    'no-cors',  // required for Apps Script
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body:    JSON.stringify(payload)
     });
+    
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    
     goTo(6);  // success slide
   } catch (err) {
+    console.error(err);
     btn.textContent = 'Retry';
     btn.disabled = false;
     alert('Submission failed. Check your connection and try again.');
